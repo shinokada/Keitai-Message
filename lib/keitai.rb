@@ -2,43 +2,19 @@
 # @param input [String]
 # @return [String] converted letters
 class Keitai
-  ##
-  # allocate letters to array using array key
-  def initialize(input)
-    @letters = []
-    @letters[1] = '.,!? '
-    @letters[2] = 'abc'
-    @letters[3] = 'def'
-    @letters[4] = 'ghi'
-    @letters[5] = 'jkl'
-    @letters[6] = 'mno'
-    @letters[7] = 'pqrs'
-    @letters[8] = 'tuv'
-    @letters[9] = 'wxyz'
-    @letters[0] = ''
-    @input = input.gsub(/^0+/, '') if input.include?('0')
+  LETTERS = ['.,!? ', 'abc', 'def', 'ghi', 'jkl', 'mno', 'pqrs', 'tuv', 'wxyz'].freeze
+
+  def self.decipher(input)
+    input
+      .scan(/([1-9]+)0/)
+      .flatten
+      .map{|item| covert_to_letter(item) }
+      .join
   end
 
-  ##
-  # Returen initialized input
-  def input
-    @input
-  end
-
-  ##
-  # Convert strings to letter
-  def decipher
-    if @input
-      main_arr = @input.split('0').map do |item|
-        number = item[0].to_i
-        item_length = item.length
-        letter_length = @letters[number].length
-        if item_length > 0 and /^(\d)\1*$/.match(item)
-          position = item_length % letter_length
-          @letters[number][position - 1]
-        end
-      end
-    end
-    main_arr.join
+  def self.covert_to_letter(item)
+    letter_index = item[0].to_i - 1
+    position = item.length % LETTERS[letter_index].length - 1
+    LETTERS[letter_index][position]
   end
 end
